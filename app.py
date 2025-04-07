@@ -11,9 +11,8 @@ import json
 app = Flask(__name__)
 
 # Configuration
-UPLOAD_FOLDER = '/Users/bouchramouhamedcheikh/Desktop/ModifAI/static/uploads'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+upload_folder = 'static/uploads'
+os.makedirs(upload_folder, exist_ok=True)
 
 @app.route('/')
 def index():
@@ -43,7 +42,7 @@ def upload():
 
     if file:
         filename = secure_filename(file.filename)
-        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        filepath = os.path.join(upload_folder, filename)
         file.save(filepath)
 
         print(f"Image saved in: {filepath}")
