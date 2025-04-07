@@ -57,12 +57,18 @@ def combined_similarity_score(embed1, embed2, hist1, hist2, alpha=0.7):
 
 # Web driver setup
 def get_driver():
-    options = Options()
-    options.add_argument("--headless")
-    options.add_argument("--disable-gpu")
-    options.add_argument("--no-sandbox")
-    options.add_argument("--window-size=1920,1080")
-    return webdriver.Chrome(service=Service(), options=options)
+    try:
+        options = Options()
+        options.add_argument("--headless")
+        options.add_argument("--disable-gpu")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--window-size=1920,1080")
+        print("🧪 Creating Chrome driver...")
+        return webdriver.Chrome(service=Service(), options=options)
+    except Exception as e:
+        print("❌ Failed to create driver:", e)
+        raise
+
 
 def parse_price(price_text):
     try:
