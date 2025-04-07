@@ -46,7 +46,7 @@ def upload():
         file.save(filepath)
 
         print(f"Image saved in: {filepath}")
-        img_url = f"https://modifai-yc0w.onrender.com/{filepath}"
+        img_url = f"https://modifai-webapp.onrender.com/{filepath}"
 
 
         # Call the other script's function and pass the image path
