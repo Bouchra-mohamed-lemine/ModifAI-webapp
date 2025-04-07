@@ -10,7 +10,7 @@ os.environ["REPLICATE_API_TOKEN"] = "r8_03FfNMLg3qEHJKFRS0eP7kCxvPjktNi1yT3Bs"
 
 def furnish_image(img_file_name, image_url, style, room_type):
 
-    prompt = f"A beutiful furnished {room_type} with a {style} touch"
+    prompt = f"A beutiful furnished {room_type} with {style} touch"
 
     os.makedirs("static/generated_images", exist_ok=True)
 
