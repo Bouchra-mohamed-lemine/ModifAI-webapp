@@ -47,7 +47,10 @@ def upload():
 
         print(f"Image saved in: {filepath}")
 
-        img_url = upload_to_imgbb(filepath)
+        # img_url = upload_to_imgbb(filepath)
+
+        img_url = f"https://modifai-yc0w.onrender.com/{filepath}"
+
 
         # Call the other script's function and pass the image path
         furnished_img_path = furnish_image(filename.split(".")[0], img_url, style=selected_style, room_type=room_type)
