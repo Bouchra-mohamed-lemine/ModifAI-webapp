@@ -39,25 +39,4 @@ def extract_products(data):
     return products
 
 
-
-
-
-
-def upload_to_imgbb(image_path, api_key="72dffb425d527280be597176e0e22dab"):
-    with open(image_path, "rb") as file:
-        url = "https://api.imgbb.com/1/upload"
-        payload = {
-            "key": api_key,
-        }
-        files = {
-            "image": file,
-        }
-        response = requests.post(url, data=payload, files=files)
-        if response.status_code == 200:
-            print(response.json()["data"]["url"])
-            return response.json()["data"]["url"]
-        else:
-            print("❌ Upload failed:", response.text)
-            return None
-
  
