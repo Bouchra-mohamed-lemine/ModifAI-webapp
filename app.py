@@ -5,7 +5,7 @@ from image_generator import furnish_image
 import requests
 from yolo import extract_items
 from scraper import ikea_scraper
-from utils import extract_products, upload_to_imgbb
+from utils import extract_products
 import json
 
 app = Flask(__name__)
@@ -46,9 +46,6 @@ def upload():
         file.save(filepath)
 
         print(f"Image saved in: {filepath}")
-
-        # img_url = upload_to_imgbb(filepath)
-
         img_url = f"https://modifai-yc0w.onrender.com/{filepath}"
 
 
@@ -57,6 +54,9 @@ def upload():
 
         # pass furnished_img_path to yolo.py to extract the products images
         img_paths = extract_items(furnished_img_path)
+
+        print("✅ Final products:", img_paths)
+
 
         # pass output of yolo to scraper.py
         products_paths = ikea_scraper(img_paths, budget, selected_style, room_type)
