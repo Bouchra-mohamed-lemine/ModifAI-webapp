@@ -1,0 +1,256 @@
+body {
+    margin: 0 2em 5em 2em;
+    font-family: Arial, sans-serif;
+    /* background: #fdf8f4; */
+    color: #222;
+    text-align: center;
+    background-color: #e9e7e0;
+  }
+
+
+  .basket-icon {
+    position: fixed;
+    top: 20px;
+    right: 20px;    
+    font-size: 28px;
+    color: #333;
+    cursor: pointer;
+    z-index: 1000;
+  }
+  
+  .basket-icon span {
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 7px;
+    font-size: 14px;
+    position: absolute;
+    top: -10px;
+    right: -10px;
+  }
+  
+  
+  .container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+  }
+  
+  .comparison-section {
+    margin-bottom: 40px;
+  }
+  
+  .labels {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    margin: 10px 0;
+    font-size: 1.2rem;
+    max-width: 70%;
+    margin: auto;
+    padding: 1em 16em;
+  }
+  
+  .images {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .images img {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+  
+  .section-title {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+  
+  .products {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 30px;
+  }
+  
+  .product {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .product img {
+    width: 100px;
+    height: auto;
+    margin-bottom: 10px;
+  }
+  
+  .product p {
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  .horizontal-scroll-container {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+    padding: 20px 10px;
+    gap: 20px;
+    scroll-snap-type: x mandatory;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    margin-top: 30px;
+    max-width: 100%;
+  }
+  
+  .product-card {
+    flex: 0 0 auto;
+    width: 140px;
+    text-align: center;
+    background-color: #fdfdfd;
+    border-radius: 8px;
+    padding: 10px;
+    scroll-snap-align: start;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  }
+  
+  .product-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+  }
+  
+  .product-name {
+    font-size: 0.9rem;
+    margin: 8px 0 4px;
+    font-weight: 500;
+  }
+  
+  .product-price {
+    color: #444;
+    font-weight: bold;
+    margin: 0;
+  }
+
+  .scroll-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-top: 30px;
+    justify-content: center;
+  }
+  
+  .scroll-btn {
+    color: #444;
+    font-size: 1.5rem;
+    cursor: pointer;
+    
+    transition: all 0.3s ease;
+    box-shadow: none; /* optional: remove shadow if you want a cleaner look */
+    border: none;
+    background: transparent; /* <-- this removes the white background */
+    padding: 0; /* ensure no extra space around the icon */
+
+    opacity: .5
+  }
+  
+  
+  .scroll-btn:hover {
+    opacity: 1;
+  }
+  
+  .scroll-btn.left {
+    position: absolute;
+    margin-top: 1.5em;
+    left: -50px;
+  }
+  
+  .scroll-btn.right {
+    margin-top: 1.5em;
+    position: absolute;
+    right: -50px;
+  }
+  
+  
+  .horizontal-scroll-container {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 20px 40px; /* Padding to avoid arrow overlap */
+    gap: 20px;
+    scroll-snap-type: x mandatory;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    max-width: 100%;
+  }
+
+  .horizontal-scroll-container::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Hide scrollbar for Firefox */
+  .horizontal-scroll-container {
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .add-btn {
+    background-color:  #aba592;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 1.3rem;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.3s;
+    opacity: 1;
+  }
+  
+  .add-btn:hover {
+    background-color:  #93917f;
+    opacity: 1;
+  } 
+
+  .submit-btn {
+    padding: 10px 20px;
+    font-size: 1em;
+    border: none;
+    background: #50994d;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 2em;
+  }
+
+  .submit-btn:hover {
+      background: #2d762a;
+  }
+
+
+
+  .card.selected {
+    border: 1px solid #50994d;
+  }
+
+  .checkout-summary {
+    margin-top: 2em;
+    text-align: center;
+  }
+  
+  #basket-total {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 0.8em;
+  }
+  
+  
