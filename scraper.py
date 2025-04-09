@@ -20,6 +20,10 @@ import cv2
 from torchvision import transforms
 from torchvision.models import resnet50, ResNet50_Weights
 import shutil
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+ 
+
 
 # Configure retailer URLs
 RETAILERS = {
@@ -71,27 +75,19 @@ def combined_similarity_score(embed1, embed2, hist1, hist2, alpha=0.7):
 
 
 def get_driver():
-    """Configure and return Chrome driver with Render-friendly settings"""
-    try:
-        options = Options()
-        options.add_argument("--headless=new")
-        options.add_argument("--disable-gpu")
-        options.add_argument("--no-sandbox")
-        options.add_argument("--disable-dev-shm-usage")
-        options.add_argument("--window-size=1920,1080")
-        
-        # Path to Chrome binary in user space
-        chrome_bin = os.path.expanduser("~/.local/bin/google-chrome")
-        options.binary_location = chrome_bin
-        
-        # Use chromedriver from PATH
-        service = Service(executable_path="chromedriver")
-        
-        print("🚀 Initializing Chrome driver...")
-        return webdriver.Chrome(service=service, options=options)
-    except Exception as e:
-        print(f"❌ Driver initialization failed: {traceback.format_exc()}")
-        raise
+    options = Options()
+    options.add_argument("--headless")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--window-size=1920,1080")
+    options.binary_location = os.environ.get("CHROME_BIN", "/usr/bin/chromium")
+
+    driver = webdriver.Chrome(
+        executable_path=os.environ.get("CHROMEDRIVER_PATH", "/usr/bin/chromedriver"),
+        options=options
+    )
+
+    return driver
 
 
 
