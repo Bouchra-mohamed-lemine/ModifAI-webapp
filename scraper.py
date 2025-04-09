@@ -68,6 +68,8 @@ def combined_similarity_score(embed1, embed2, hist1, hist2, alpha=0.7):
     color_sim = cosine_similarity(hist1, hist2)[0][0]
     return alpha * resnet_sim + (1 - alpha) * color_sim
 
+
+
 def get_driver():
     """Configure and return Chrome driver with Render-friendly settings"""
     try:
@@ -78,15 +80,20 @@ def get_driver():
         options.add_argument("--disable-dev-shm-usage")
         options.add_argument("--window-size=1920,1080")
         
-        # Render-specific paths
-        options.binary_location = "/usr/bin/google-chrome"
-        service = Service(executable_path="/usr/bin/chromedriver")
+        # Path to Chrome binary in user space
+        chrome_bin = os.path.expanduser("~/.local/bin/google-chrome")
+        options.binary_location = chrome_bin
+        
+        # Use chromedriver from PATH
+        service = Service(executable_path="chromedriver")
         
         print("🚀 Initializing Chrome driver...")
         return webdriver.Chrome(service=service, options=options)
     except Exception as e:
         print(f"❌ Driver initialization failed: {traceback.format_exc()}")
         raise
+
+
 
 def parse_price(price_text):
     """Improved price parsing with international format support"""
