@@ -1,3 +1,4 @@
+# Import standard libraries
 import os
 import time
 import requests
@@ -16,30 +17,26 @@ import cv2
 from torchvision import transforms
 from torchvision.models import resnet50, ResNet50_Weights
 import shutil
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 
-
- 
-
-# Retailer Search URLs
+# Set retailer search URLs (currently only IKEA)
 RETAILERS = {
     "ikea": "https://www.ikea.com/us/en/search/?q="
 }
 
-# Image transform and model setup
+# Load pretrained ResNet50 model for feature extraction
 weights = ResNet50_Weights.DEFAULT
 transform = transforms.Compose([
-    transforms.Resize((224, 224)),
-    transforms.ToTensor(),
-    transforms.Normalize(mean=[0.485, 0.456, 0.406],
+    transforms.Resize((224, 224)),  # Resize images to match model input
+    transforms.ToTensor(),  # Convert to tensor
+    transforms.Normalize(mean=[0.485, 0.456, 0.406],  # Normalize using ImageNet stats
                          std=[0.229, 0.224, 0.225]),
 ])
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")  # Use GPU if available
 resnet_model = resnet50(weights=weights)
-resnet_model = torch.nn.Sequential(*list(resnet_model.children())[:-1])  # Remove classifier
-resnet_model.eval().to(device)
+resnet_model = torch.nn.Sequential(*list(resnet_model.children())[:-1])  # Remove classifier layer
+resnet_model.eval().to(device)  # Set model to eval mode and move to device
 
+# Extract image embedding using ResNet50
 def get_image_embedding(img_path):
     image = Image.open(img_path).convert("RGB")
     image = transform(image).unsqueeze(0).to(device)
@@ -47,6 +44,7 @@ def get_image_embedding(img_path):
         embedding = resnet_model(image).squeeze().cpu().numpy()
     return embedding.reshape(1, -1)
 
+# Calculate color histogram in HSV space
 def get_color_histogram(image_path):
     image = cv2.imread(image_path)
     image = cv2.resize(image, (224, 224))
@@ -55,48 +53,48 @@ def get_color_histogram(image_path):
                         [0, 180, 0, 256, 0, 256])
     return cv2.normalize(hist, hist).flatten().reshape(1, -1)
 
+# Combine cosine similarity scores of ResNet embeddings and color histograms
 def combined_similarity_score(embed1, embed2, hist1, hist2, alpha=0.7):
     resnet_sim = cosine_similarity(embed1, embed2)[0][0]
     color_sim = cosine_similarity(hist1, hist2)[0][0]
     return alpha * resnet_sim + (1 - alpha) * color_sim
 
-
+# Setup and return a headless Selenium Chrome driver
 def get_driver():
     options = Options()
-    options.add_argument("--headless")
+    options.add_argument("--headless")  # Run Chrome in headless mode
     options.add_argument("--disable-gpu")
     options.add_argument("--no-sandbox")
     options.add_argument("--window-size=1920,1080")
     options.binary_location = os.environ.get("CHROME_BIN", "/usr/bin/chromium")
-
     service = Service(executable_path=os.environ.get("CHROMEDRIVER_PATH", "/usr/bin/chromedriver"))
-
     driver = webdriver.Chrome(service=service, options=options)
     return driver
 
-
-
+# Parse float price from text, returns inf on failure
 def parse_price(price_text):
     try:
         return float(''.join(filter(lambda x: x.isdigit() or x == '.', price_text)))
     except:
         return float('inf')
 
+# Main scraping logic for finding similar products
 def search_products(output_dir, reference_img_path, budget, style, room_type, product_name, similarity_threshold=0.7, alpha=0.7):
-    
     driver = get_driver()
     try:
+        # Extract features from the reference image
         reference_embedding = get_image_embedding(reference_img_path)
         reference_hist = get_color_histogram(reference_img_path)
     except Exception as err:
         print(f"[ERROR] Could not load reference image: {err}")
         return []
 
+    # Format search query
     query = f"{style} {room_type} {product_name}".replace(" ", "+")
     product_candidates = []
+    seen_links = set()  # Avoid duplicates
 
-    seen_links = set()  # NEW: track seen products
-
+    # Iterate through all retailers (currently only IKEA)
     for retailer, base_url in RETAILERS.items():
         try:
             url = f"{base_url}{query}"
@@ -105,12 +103,14 @@ def search_products(output_dir, reference_img_path, budget, style, room_type, pr
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight/3);")
             time.sleep(2)
 
+            # Parse page HTML using BeautifulSoup
             soup = BeautifulSoup(driver.page_source, "html.parser")
             print(f"Scraping {retailer}...")
 
             products = soup.select('div.plp-product-list__products > div.plp-fragment-wrapper')
             for p in products:
                 try:
+                    # Extract product details
                     name = p.select_one('span.plp-price-module__product-name').text.strip()
                     price_text = p.select_one('span.plp-price__integer').text.strip()
                     price = parse_price(price_text)
@@ -119,27 +119,30 @@ def search_products(output_dir, reference_img_path, budget, style, room_type, pr
 
                     if link in seen_links:
                         continue
-                    
-
                     if price > budget or not image.startswith("http"):
                         continue
 
                     seen_links.add(link)
 
+                    # Download and save image
                     img_data = requests.get(image).content
                     os.makedirs("temp_images", exist_ok=True)
                     temp_path = f"temp_images/{hash(image)}.jpg"
                     with open(temp_path, 'wb') as handler:
                         handler.write(img_data)
 
+                    # Extract features from product image
                     ikea_embedding = get_image_embedding(temp_path)
                     image_hist = get_color_histogram(temp_path)
+
+                    # Compute similarity score
                     similarity = combined_similarity_score(
                         ikea_embedding, reference_embedding,
                         image_hist, reference_hist,
                         alpha=alpha
                     )
 
+                    # Store product if similarity threshold is met
                     if similarity >= similarity_threshold:
                         product_candidates.append({
                             "name": name,
@@ -159,14 +162,17 @@ def search_products(output_dir, reference_img_path, budget, style, room_type, pr
 
     driver.quit()
 
+    # Keep top 3 most similar products
     top_products = sorted(product_candidates, key=lambda x: x['similarity'], reverse=True)[:3]
     output_dict = {}
 
     for i, product in enumerate(top_products, 1):
+        # Generate safe filenames
         safe_name = "".join(c for c in product['name'] if c.isalnum() or c in (' ', '_')).rstrip().replace(" ", "_")
         image_path = f"{output_dir}/{i:02d}_{safe_name}.jpg"
         meta_path = f"{output_dir}/{i:02d}_{safe_name}.txt"
 
+        # Save image and metadata
         with open(image_path, 'wb') as img_file:
             img_file.write(product['img_data'])
 
@@ -182,23 +188,25 @@ def search_products(output_dir, reference_img_path, budget, style, room_type, pr
 
     return output_dict
 
-
-
-
-
+# Wrapper function for batch processing multiple product reference images
 def ikea_scraper(product_paths, budget, style, room_type):
     output_dir = "static/filtered_results"
+
+    # Clear previous results
     if os.path.exists(output_dir) and os.path.isdir(output_dir):
         shutil.rmtree(output_dir)
     os.makedirs(output_dir, exist_ok=True)
     
     products_paths = []
-    seen_names = set()  # <- NEW: to track seen product names (e.g., "PARADISISK")
+    seen_names = set()  # Track product names to avoid duplicates
 
+    # Iterate through each reference image
     for img_path in product_paths:
+        # Extract product name from filename
         product_name = img_path.split("/")[-1].split(".")[0].split("_")[0]
         print("****************** Scraper looking for ", product_name)
 
+        # Search and filter results for current product
         output = search_products(
             output_dir=output_dir,
             reference_img_path=img_path,
@@ -210,7 +218,7 @@ def ikea_scraper(product_paths, budget, style, room_type):
             alpha=0.4
         )
 
-        # Filter out any already seen products
+        # Filter out duplicates by name
         filtered_output = {}
         for img_path, meta_path in output.items():
             base_name = os.path.basename(img_path)
@@ -223,5 +231,3 @@ def ikea_scraper(product_paths, budget, style, room_type):
             products_paths.append(filtered_output)
 
     return products_paths
-
- 
