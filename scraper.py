@@ -186,7 +186,7 @@ def ikea_scraper(product_paths, budget, style, room_type):
     os.makedirs(output_dir, exist_ok=True)
     
     products_paths = []
-    seen_names = set()  # <- NEW: to track seen product names (e.g., "PARADISISK")
+    seen_names = set()  # track seen product names (e.g., "PARADISISK")
 
     for img_path in product_paths:
         product_name = img_path.split("/")[-1].split(".")[0].split("_")[0]
