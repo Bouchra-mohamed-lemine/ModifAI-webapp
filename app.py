@@ -23,11 +23,6 @@ def index():
 @app.route('/upload', methods=['POST'])
 def upload():
 
-
-    # products = [{'image': 'static/filtered_results/01_HYLTARP.jpg', 'Name': 'HYLTARP', 'Price': 1449.0}, {'image': 'static/filtered_results/02_HYLTARP.jpg', 'Name': 'HYLTARP', 'Price': 1449.0}, {'image': 'static/filtered_results/03_UPPLAND.jpg', 'Name': 'UPPLAND', 'Price': 849.0}]
-    # return render_template('results.html', before_image="static/uploads/input.png", after_image="static/generated_images/output_0.png", products=products)
-
-
     if 'room-image' not in request.files:
         return "No file part", 400
 
@@ -46,7 +41,7 @@ def upload():
         file.save(filepath)
 
         print(f"Image saved in: {filepath}")
-        img_url = f"https://modifai-webapp.onrender.com/{filepath}"
+        img_url = f"https://modifai-website.onrender.com/{filepath}"
 
 
         # Call the other script's function and pass the image path
