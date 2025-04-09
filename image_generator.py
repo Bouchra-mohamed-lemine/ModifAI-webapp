@@ -2,10 +2,8 @@ import replicate
 import os
 import requests
 
-# Set your API token
+# Set the API token
 os.environ["REPLICATE_API_TOKEN"] = "r8_03FfNMLg3qEHJKFRS0eP7kCxvPjktNi1yT3Bs"
-
-
 
 
 def furnish_image(img_file_name, image_url, style, room_type):
@@ -14,7 +12,7 @@ def furnish_image(img_file_name, image_url, style, room_type):
 
     os.makedirs("static/generated_images", exist_ok=True)
 
-    # Run the model
+    # Run the replicate model
     output = replicate.run(
         "jschoormans/comfyui-interior-remodel:2a360362540e1f6cfe59c9db4aa8aa9059233d40e638aae0cdeb6b41f3d0dcce",
         input={
