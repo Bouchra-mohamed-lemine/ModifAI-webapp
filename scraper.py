@@ -197,7 +197,7 @@ def ikea_scraper(product_paths, budget, style, room_type):
 
     for img_path in product_paths:
         product_name = img_path.split("/")[-1].split(".")[0].split("_")[0]
-        print("******************", product_name)
+        print("****************** Scraper looking for ", product_name)
 
         output = search_products(
             output_dir=output_dir,
