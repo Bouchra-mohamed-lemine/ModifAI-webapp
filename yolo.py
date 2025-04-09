@@ -53,7 +53,17 @@ def extract_items(img_path):
         cropped = combined[y1:y2, x1:x2]
 
         # Save result
-        output_path = f"static/products/{class_name}.png"
+        # Base path
+        base_path = f"static/products/{class_name}.png"
+        output_path = base_path
+
+        # Increment suffix until the file name is unique
+        counter = 1
+        while os.path.exists(output_path):
+            output_path = f"static/products/{class_name}_{counter}.png"
+            counter += 1
+
+        # Save the image
         cv2.imwrite(output_path, cropped)
         print(f"🖼️ Saved as {output_path}")
 
