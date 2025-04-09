@@ -123,14 +123,24 @@
 
 
   function addAllToBasket() {
-    products.forEach(product => {
-      const exists = selected_products.find(p => p.Name === product.Name);
-      if (!exists) {
-        selected_products.push(product);
-      }
-    });
-    updateBasketCount();
-  }
+  products.forEach((product, index) => {
+    const exists = selected_products.find(p => p.Name === product.Name);
+    if (!exists) {
+      selected_products.push(product);
+    }
+
+    // Add green border (visual selection) and update button to minus
+    const card = document.getElementById(`card-${index + 1}`);
+    const btn = document.getElementById(`btn-${index + 1}`);
+    if (card && btn) {
+      card.classList.add('selected');
+      btn.textContent = '−';
+    }
+  });
+
+  updateBasketCount();
+}
+
 
   document.getElementById("show-basket-form").addEventListener("submit", function (e) {
     document.getElementById("show-selected-products").value = JSON.stringify(selected_products);
