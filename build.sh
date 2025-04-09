@@ -1,21 +1,26 @@
 #!/usr/bin/env bash
 set -o errexit
 
-# Install system dependencies
-sudo apt-get update
-sudo apt-get install -y \
-    wget \
-    unzip \
-    google-chrome-stable \
-    libgl1-mesa-glx
+# Set up local binaries
+mkdir -p ~/.local/bin
 
-# Install Chromedriver (match Chrome version)
-CHROME_VERSION=$(google-chrome --version | awk '{print $3}')
-CHROMEDRIVER_VERSION="${CHROME_VERSION%.*}"
-wget -N "https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip"
-unzip chromedriver_linux64.zip -d ~/
-sudo mv ~/chromedriver /usr/bin/chromedriver
-sudo chmod +x /usr/bin/chromedriver
+# Install Chrome
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+dpkg -x google-chrome-stable_current_amd64.deb /tmp/chrome
+mv /tmp/chrome/opt/google/chrome/google-chrome ~/.local/bin/
+rm google-chrome-stable_current_amd64.deb
+
+# Install Chromedriver
+CHROME_VERSION=$(~/.local/bin/google-chrome --version | awk '{print $3}')
+CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION%.*}")
+wget "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip"
+unzip chromedriver_linux64.zip
+mv chromedriver ~/.local/bin/
+chmod +x ~/.local/bin/chromedriver
+
+# Add to PATH
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
 
 # Install Python dependencies
 pip install -r requirements.txt
