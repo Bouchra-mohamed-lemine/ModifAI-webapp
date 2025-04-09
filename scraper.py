@@ -18,6 +18,8 @@ from torchvision.models import resnet50, ResNet50_Weights
 import shutil
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+
+
  
 
 # Retailer Search URLs
@@ -59,7 +61,6 @@ def combined_similarity_score(embed1, embed2, hist1, hist2, alpha=0.7):
     return alpha * resnet_sim + (1 - alpha) * color_sim
 
 
-
 def get_driver():
     options = Options()
     options.add_argument("--headless")
@@ -68,12 +69,11 @@ def get_driver():
     options.add_argument("--window-size=1920,1080")
     options.binary_location = os.environ.get("CHROME_BIN", "/usr/bin/chromium")
 
-    driver = webdriver.Chrome(
-        executable_path=os.environ.get("CHROMEDRIVER_PATH", "/usr/bin/chromedriver"),
-        options=options
-    )
+    service = Service(executable_path=os.environ.get("CHROMEDRIVER_PATH", "/usr/bin/chromedriver"))
 
+    driver = webdriver.Chrome(service=service, options=options)
     return driver
+
 
 
 def parse_price(price_text):
