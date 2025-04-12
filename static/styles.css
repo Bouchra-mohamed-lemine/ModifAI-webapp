@@ -1,39 +1,38 @@
+/* General Page Styling */
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    text-align: center;
-    background-color: #e9e7e0;
+    margin: 0; /* Remove default spacing */
+    font-family: Arial, sans-serif;  
+    text-align: center; /* Center text by default */
+    background-color: #e9e7e0; /* Light beige background */
 }
 
+/* Main Section (Landing Page) */
 .landing-page { 
-    height: 100vh;
-    background: url('site_images/background.png') no-repeat center center/cover;
-    /* display: flex; */
-    /* align-items: center;
-    justify-content: center;
-    text-align: center; */
+    height: 100vh; /* Full viewport height */
+    background: url('site_images/background.png') no-repeat center center/cover; /* Fullscreen background image */
     color: white;
     position: relative;
-} 
+}
 
-
+/* Overlay content on landing page */
 .overlay {
-    /* background: rgba(0, 0, 0, 0.3); */
     padding: 20px;
     border-radius: 10px;
     font-size: 1.5em;
-    color: #000;
+    color: #000; /* Text color overrides white */
 }
 
+/* Main Heading */
 h1 {
     font-size: 2.5em;
 }
 
+/* Primary Buttons */
 button {
     padding: 10px 20px;
     font-size: .8em;
     border: none;
-    background: #50994d;
+    background: #50994d; /* Green tone */
     color: white;
     border-radius: 5px;
     cursor: pointer;
@@ -41,21 +40,21 @@ button {
 }
 
 button:hover {
-    background: #2d762a;
+    background: #2d762a; /* Darker green on hover */
 }
 
-/* Layout */
+/* Upload Section Layout */
 #upload-section {
     background: #e9e7e0;
     padding: 40px;
     font-family: 'Segoe UI', sans-serif;
-  }
+}
   
-  .upload-form-container {
+.upload-form-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    align-items: stretch; /* 👈 This makes both sides same height */
+    align-items: stretch; /* Ensures equal height sides */
     gap: 40px;
     background: white;
     border-radius: 15px;
@@ -63,37 +62,36 @@ button:hover {
     box-shadow: 0 0 15px rgba(0,0,0,0.05);
     width: 80%;
     margin: auto;
-  }
+}
   
-  
-  .upload-left,
-  .upload-right {
-    flex: 1 1 400px;
+/* Left and Right sides of the form */
+.upload-left,
+.upload-right {
+    flex: 1 1 400px; /* Flexible layout */
     max-width: 500px;
-  }
+}
 
-  .upload-right {
+.upload-right {
     display: flex;
     flex-direction: column;
-    justify-content: center; /* or space-between if you want more spacing */
-  }
-  
+    justify-content: center; /* Align form vertically */
+}
 
-  .upload-left {
+.upload-left {
     margin-right: 2em;
-  }
-  
-  /* Image Preview */
-  .room-image-preview {
+}
+
+/* Uploaded Image Preview */
+.room-image-preview {
     width: 100%;
     max-height: 250px;
     object-fit: cover;
     border-radius: 12px;
     margin-bottom: 20px;
-  }
-  
-  
-  .upload-box {
+}
+
+/* Drag-and-Drop Box */
+.upload-box {
     border: 2px dashed #ccc;
     border-radius: 10px;
     padding: 30px;
@@ -101,64 +99,67 @@ button:hover {
     background-color: #fafafa;
     cursor: pointer;
     transition: 0.3s;
-  }
-  
-  .upload-box:hover {
+}
+
+.upload-box:hover {
     border-color: #007bff;
     background-color: #f0f8ff;
-  }
-  
-  .upload-box .browse {
+}
+
+.upload-box .browse {
     color: #007bff;
     font-weight: bold;
     text-decoration: underline;
     cursor: pointer;
-  }
-  
-  #image-preview {
+}
+
+/* Image preview once user uploads a file */
+#image-preview {
     width: 100%;
     margin-top: 10px;
     border-radius: 10px;
     display: none;
-  }
-  
-  .filename {
+}
+
+/* Filename text under preview */
+.filename {
     margin-top: 10px;
     font-size: 0.9em;
     color: #666;
-  }
-  
-  /* Form styling */
-  .upload-right form {
+}
+
+/* Form inside .upload-right column */
+.upload-right form {
     display: flex;
     flex-direction: column;
     gap: 20px;
-  }
-  
-  .upload-right label {
+}
+
+/* Labels for dropdowns/inputs */
+.upload-right label {
     font-weight: 600;
     margin-bottom: 5px;
     margin: 1.5em 0 1em 0;
-  }
-  
-  .upload-right select, #budget {
+}
+
+/* Input fields: dropdown + number input */
+.upload-right select, 
+#budget {
     padding: 10px;
     font-size: 1rem;
     border: 1px solid #ccc;
     border-radius: 8px;
-  }
+}
 
-
-  
-  /* Tags */
-  .tag-row {
+/* Style Preference Tags */
+.tag-row {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     justify-content: center; 
-  }
-  
-  .tag {
+}
+
+.tag {
     border: 1px solid #ccc;
     border-radius: 20px;
     padding: 8px 16px;
@@ -167,39 +168,38 @@ button:hover {
     cursor: pointer;
     transition: all 0.3s ease;
     color: #000;
-  }
+}
 
-  .tag.selected {
-        border: 2px solid #007bff;
-        font-weight: bold;
-    }
+/* Selected Style Tag Highlighting */
+.tag.selected {
+    border: 2px solid #007bff;
+    font-weight: bold;
+}
 
-
-  
-  .tag:hover {
+.tag:hover {
     background-color: #e0e0e0;
-  }
-  
-  /* Marketplaces */
-  .marketplaces {
+}
+
+/* Marketplace Images (Retailer Logos) */
+.marketplaces {
     display: flex;
     gap: 20px;
     align-items: center;
     justify-content: center; 
-  }
-  
-  .marketplaces img {
+}
+
+.marketplaces img {
     height: 30px;
     cursor: pointer;
     transition: transform 0.2s ease;
-  }
-  
-  .marketplaces img:hover {
+}
+
+.marketplaces img:hover {
     transform: scale(1.1);
-  }
-  
-  /* Button */
-  .submit-btn {
+}
+
+/* Continue Button Styling */
+.submit-btn {
     background-color: #007bff;
     color: white;
     padding: 12px;
@@ -209,28 +209,28 @@ button:hover {
     cursor: pointer;
     margin-top: 2em;
     transition: background 0.3s;
-  }
-  
-  .submit-btn:hover {
-    background-color: #0056b3;
-  }
-  
+}
 
-  .marketplace-img {
+.submit-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Marketplace image highlight styling */
+.marketplace-img {
     width: 100px;
     height: 50px;
     transition: transform 0.3s ease, opacity 0.3s ease;
     cursor: pointer;
-    /* opacity: 0.7; */
     border-radius: 8px;
+    /* opacity: 0.7; Optional dimming */
 }
 
 .marketplace-img:hover {
     opacity: 1;
 }
 
+/* Marketplace image when selected */
 .marketplace-img.selected-marketplace {
-    /* transform: scale(1.2);
-    opacity: 1; */
+    /* Optional hover enhancements */
     border: 2px solid #007bff;
 }
