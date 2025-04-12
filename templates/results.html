@@ -1,54 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Basic page setup -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Renovation Results</title>
+
+  <!-- Link to external stylesheet for this page -->
   <link rel="stylesheet" href="{{ url_for('static', filename='results.css') }}">
 
+  <!-- Font Awesome for icons (e.g., basket, arrows) -->
   <script src="https://kit.fontawesome.com/8a181a8ab1.js" crossorigin="anonymous"></script>
+
+  <!-- Vara.js: Optional animated text library (not used here but maybe later) -->
   <script src="https://rawcdn.githack.com/akzhy/Vara/16e30acca2872212e28735cfdbaba696a355c780/src/vara.min.js"></script>
-
-
 </head>
+
 <body>
 
+  <!-- Basket Icon with item count -->
   <div class="basket-icon" onclick="goToBasket()">
     <i class="fa-solid fa-basket-shopping"></i>
-    <span id="basket-count">0</span>
+    <span id="basket-count">0</span> <!-- Shows number of selected items -->
   </div>
 
+  <!-- Form to submit selected products to the /view_basket route -->
   <form id="show-basket-form" action="/view_basket" method="POST">
     <input type="hidden" name="selected_products" id="show-selected-products">
   </form>
-  
 
+  <!-- Page container -->
   <div class="container">
-    <!-- Before & After Section -->
+
+    <!-- Section to compare before and after images -->
     <div class="comparison-section">
       <div class="labels">
         <span>Before</span>
         <span>After</span>
       </div>
+
       <div class="images">
-      {% if before_image %}
-        <img src="{{ before_image }}" alt="Unfurnished room" class="furnished-image">
-      {% endif %}
-    
-      {% if after_image %}
-        <img src="{{ after_image }}" alt="Furnished room" class="furnished-image">
-      {% endif %}
+        {% if before_image %}
+          <img src="{{ before_image }}" alt="Unfurnished room" class="furnished-image">
+        {% endif %}
+
+        {% if after_image %}
+          <img src="{{ after_image }}" alt="Furnished room" class="furnished-image">
+        {% endif %}
       </div>
     </div>
 
-  
-
-    <!-- Suggested Products -->
+    <!-- Product Suggestions Section -->
     <h2 class="section-title">Suggested Products</h2>
+
+    <!-- Horizontal scroll wrapper -->
     <div class="scroll-wrapper">
-      
-      <button class="scroll-btn left" onclick="scrollProducts(-1)"><i class="fa-solid fa-circle-arrow-left"></i></button>
-    
+      <!-- Left scroll button -->
+      <button class="scroll-btn left" onclick="scrollProducts(-1)">
+        <i class="fa-solid fa-circle-arrow-left"></i>
+      </button>
+
+      <!-- Product cards container -->
       <div class="horizontal-scroll-container" id="product-scroll">
         {% for product in products %}
           <div class="product-card card" id="card-{{ loop.index }}">
@@ -56,126 +68,142 @@
             <p class="product-name">{{ product.Name }}</p>
             <p class="product-price">£{{ "%.2f"|format(product.Price) }}</p>
 
-            <button type="button" class="add-btn" id="btn-{{ loop.index }}" onclick='toggleBasketItem({{ product|tojson }}, "card-{{ loop.index }}", "btn-{{ loop.index }}")'>+</button>
+            <!-- Button to add/remove product from basket -->
+            <button type="button" class="add-btn" id="btn-{{ loop.index }}"
+              onclick='toggleBasketItem({{ product|tojson }}, "card-{{ loop.index }}", "btn-{{ loop.index }}")'>
+              +
+            </button>
           </div>
         {% endfor %}
       </div>
-    
-      <button class="scroll-btn right" onclick="scrollProducts(1)"><i class="fa-solid fa-circle-arrow-right"></i></button>
-    
-    </div>  
-    
+
+      <!-- Right scroll button -->
+      <button class="scroll-btn right" onclick="scrollProducts(1)">
+        <i class="fa-solid fa-circle-arrow-right"></i>
+      </button>
+    </div>
+
+    <!-- Button to add all suggested products to basket -->
     <button type="button" class="submit-btn" onclick="addAllToBasket()">Add All</button>
 
+  </div>
 
-
-
-    
-    
-    
-    
-
-
+  <!-- Script for interactivity -->
   <script>
+    // Get product list from Flask context
+    const products = {{ products | tojson }};
+    const selected_products = []; // Stores products added to basket
 
- 
-  const products = {{ products | tojson }};
-  const selected_products = [];
+    /**
+     * Toggles a product in and out of the basket
+     */
+    function toggleBasketItem(product, cardId, btnId) {
+      const card = document.getElementById(cardId);
+      const btn = document.getElementById(btnId);
 
-  function toggleBasketItem(product, cardId, btnId) {
-    const card = document.getElementById(cardId);
-    const btn = document.getElementById(btnId);
+      const index = selected_products.findIndex(p => p.Name === product.Name);
 
-    const index = selected_products.findIndex(p => p.Name === product.Name);
-    if (index === -1) {
-      // Not in basket → add
-      selected_products.push(product);
-      card.classList.add('selected');
-      btn.textContent = '−';
-    } else {
-      // Already in basket → remove
-      selected_products.splice(index, 1);
-      card.classList.remove('selected');
-      btn.textContent = '+';
+      if (index === -1) {
+        // Product not selected yet → add to basket
+        selected_products.push(product);
+        card.classList.add('selected'); // Visual cue
+        btn.textContent = '−'; // Change to minus
+      } else {
+        // Product already selected → remove from basket
+        selected_products.splice(index, 1);
+        card.classList.remove('selected');
+        btn.textContent = '+';
+      }
+
+      updateBasketCount(); // Update basket icon count
+      console.log("Selected products:", selected_products);
     }
 
-    updateBasketCount(); // Optional if you track count visually
-    console.log("Selected products:", selected_products);
-  }
-
-  function updateBasketCount() {
-    const countSpan = document.getElementById("basket-count");
-    if (countSpan) {
-      countSpan.textContent = selected_products.length;
-    }
-  }
- 
-
-
-  function addToBasket(product, cardId) {
-    const exists = selected_products.find(p => p.Name === product.Name);
-    if (!exists) {
-      selected_products.push(product);
-      document.getElementById(cardId).classList.add('selected');
-      updateBasketCount(); // if you already have this
-    }
-  }
-
-
-  function addAllToBasket() {
-  products.forEach((product, index) => {
-    const exists = selected_products.find(p => p.Name === product.Name);
-    if (!exists) {
-      selected_products.push(product);
+    /**
+     * Updates the basket icon count
+     */
+    function updateBasketCount() {
+      const countSpan = document.getElementById("basket-count");
+      if (countSpan) {
+        countSpan.textContent = selected_products.length;
+      }
     }
 
-    // Add green border (visual selection) and update button to minus
-    const card = document.getElementById(`card-${index + 1}`);
-    const btn = document.getElementById(`btn-${index + 1}`);
-    if (card && btn) {
-      card.classList.add('selected');
-      btn.textContent = '−';
+    /**
+     * Adds a product to the basket visually and logically
+     */
+    function addToBasket(product, cardId) {
+      const exists = selected_products.find(p => p.Name === product.Name);
+      if (!exists) {
+        selected_products.push(product);
+        document.getElementById(cardId).classList.add('selected');
+        updateBasketCount();
+      }
     }
-  });
 
-  updateBasketCount();
-}
+    /**
+     * Adds all suggested products to the basket
+     */
+    function addAllToBasket() {
+      products.forEach((product, index) => {
+        const exists = selected_products.find(p => p.Name === product.Name);
+        if (!exists) {
+          selected_products.push(product);
+        }
 
+        const card = document.getElementById(`card-${index + 1}`);
+        const btn = document.getElementById(`btn-${index + 1}`);
 
-  document.getElementById("show-basket-form").addEventListener("submit", function (e) {
-    document.getElementById("show-selected-products").value = JSON.stringify(selected_products);
-  });
+        if (card && btn) {
+          card.classList.add('selected');
+          btn.textContent = '−';
+        }
+      });
 
-  function goToBasket() {
-    // Hide Show Basket button
-    document.getElementById("show-basket-form").style.display = "none";
+      updateBasketCount();
+    }
 
-    // Create a form to submit selected products to /view_basket
-    const form = document.createElement("form");
-    form.method = "POST";
-    form.action = "/view_basket";
-
-    const input = document.createElement("input");
-    input.type = "hidden";
-    input.name = "selected_products";
-    input.value = JSON.stringify(selected_products);
-    form.appendChild(input);
-
-    document.body.appendChild(form);
-    form.submit();
-  }
-
-  function scrollProducts(direction) {
-    const container = document.getElementById('product-scroll');
-    const scrollAmount = 300;
-    container.scrollBy({
-      left: direction * scrollAmount,
-      behavior: 'smooth'
+    /**
+     * Adds selected products to hidden input before form submit
+     */
+    document.getElementById("show-basket-form").addEventListener("submit", function (e) {
+      document.getElementById("show-selected-products").value = JSON.stringify(selected_products);
     });
-  }
+
+    /**
+     * Navigates to basket page with selected products
+     */
+    function goToBasket() {
+      // Hide the original form to prevent double use
+      document.getElementById("show-basket-form").style.display = "none";
+
+      // Create new form programmatically
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = "/view_basket";
+
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = "selected_products";
+      input.value = JSON.stringify(selected_products);
+      form.appendChild(input);
+
+      document.body.appendChild(form);
+      form.submit();
+    }
+
+    /**
+     * Scrolls the product list left or right
+     */
+    function scrollProducts(direction) {
+      const container = document.getElementById('product-scroll');
+      const scrollAmount = 300; // Adjust scroll step
+      container.scrollBy({
+        left: direction * scrollAmount,
+        behavior: 'smooth'
+      });
+    }
   </script>
-
-
 
 </body>
 </html>
