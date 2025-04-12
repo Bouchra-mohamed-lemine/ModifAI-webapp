@@ -1,32 +1,32 @@
 /* === GLOBAL STYLES === */
 body {
-  margin: 0 2em 5em 2em; /* Margin around body: top, sides, bottom */
+  margin: 0 2em 5em 2em;
   font-family: Arial, sans-serif;
-  color: #222; /* Dark gray text */
+  color: #222;
   text-align: center;
-  background-color: #e9e7e0; /* Light beige background */
+  background-color: #e9e7e0;
 }
 
 /* === BASKET ICON === */
 .basket-icon {
-  position: fixed; /* Stays at top-right even when scrolling */
+  position: fixed;
   top: 20px;
   right: 20px;
   font-size: 28px;
   color: #333;
   cursor: pointer;
-  z-index: 1000; /* Ensures it stays on top */
+  z-index: 1000;
 }
 
 .basket-icon span {
   background-color: red;
   color: white;
-  border-radius: 50%; /* Circle shape */
+  border-radius: 50%;
   padding: 2px 7px;
   font-size: 14px;
   position: absolute;
   top: -10px;
-  right: -10px; /* Positioned over the icon */
+  right: -10px;
 }
 
 /* === MAIN CONTAINER === */
@@ -54,7 +54,7 @@ body {
 .images {
   display: flex;
   justify-content: center;
-  gap: 20px; /* Space between images */
+  gap: 20px;
 }
 
 .images img {
@@ -62,7 +62,7 @@ body {
   max-width: 500px;
   height: auto;
   border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* Soft shadow */
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
 /* === SECTION TITLE === */
@@ -71,58 +71,31 @@ body {
   margin-bottom: 20px;
 }
 
-/* === PRODUCT GRID (not used for scrollable cards) === */
-.products {
-  display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
-  gap: 30px;
-}
-
-.product {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.product img {
-  width: 100px;
-  height: auto;
-  margin-bottom: 10px;
-}
-
-.product p {
-  font-size: 1rem;
-  font-weight: bold;
-  margin: 0;
-}
-
 /* === HORIZONTAL SCROLLABLE PRODUCT CONTAINER === */
 .horizontal-scroll-container {
   display: flex;
   flex-wrap: nowrap;
   overflow-x: auto;
   scroll-behavior: smooth;
-  padding: 20px 40px; /* Padding avoids scroll arrows overlapping content */
+  padding: 20px 40px;
   gap: 20px;
-  scroll-snap-type: x mandatory; /* Ensures clean snapping to items */
+  scroll-snap-type: x mandatory;
   background: #fff;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
   max-width: 100%;
 }
 
-/* Hide scrollbar across browsers */
 .horizontal-scroll-container::-webkit-scrollbar {
   display: none;
 }
 .horizontal-scroll-container {
-  scrollbar-width: none; /* Firefox */
+  scrollbar-width: none;
 }
 
 /* === PRODUCT CARD === */
 .product-card {
-  flex: 0 0 auto; /* Prevent shrinking, fix width */
+  flex: 0 0 auto;
   width: 140px;
   text-align: center;
   background-color: #fdfdfd;
@@ -188,7 +161,7 @@ body {
 
 /* === ADD (+) BUTTON === */
 .add-btn {
-  background-color: #aba592; /* Neutral beige */
+  background-color: #aba592;
   color: white;
   border: none;
   border-radius: 50%;
@@ -210,7 +183,7 @@ body {
   padding: 10px 20px;
   font-size: 1em;
   border: none;
-  background: #50994d; /* Green */
+  background: #50994d;
   color: white;
   border-radius: 5px;
   cursor: pointer;
@@ -224,17 +197,5 @@ body {
 
 /* === VISUAL STATE FOR SELECTED PRODUCT === */
 .card.selected {
-  border: 1px solid #50994d; /* Green border when selected */
-}
-
-/* === CHECKOUT SUMMARY (e.g., total) === */
-.checkout-summary {
-  margin-top: 2em;
-  text-align: center;
-}
-
-#basket-total {
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin-bottom: 0.8em;
+  border: 1px solid #50994d;
 }
