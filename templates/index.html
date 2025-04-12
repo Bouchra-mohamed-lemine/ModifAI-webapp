@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Basic metadata and linking the stylesheet -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Room Renovation AI</title>
@@ -8,84 +9,96 @@
 </head>
 <body>
 
+    <!-- Landing Page Section -->
     <div class="landing-page">
-    <div class="overlay">
-        <h1>Transform Your Space with AI</h1>
-        <p>Use Artificial Intelligence to transform your living space.</p>
-        <button onclick="scrollToForm()">Get Started</button>
-    </div>
-      
+        <div class="overlay">
+            <h1>Transform Your Space with AI</h1>
+            <p>Use Artificial Intelligence to transform your living space.</p>
+            <!-- Smooth scrolls to the form when clicked -->
+            <button onclick="scrollToForm()">Get Started</button>
+        </div>
     </div>
 
+    <!-- Upload Form Section -->
     <section id="upload-section">
-    <form action="/upload" method="POST" enctype="multipart/form-data">
+        <form action="/upload" method="POST" enctype="multipart/form-data">
+            <div class="upload-form-container">
 
-      <div class="upload-form-container">
-        <!-- Left Side -->
-        <div class="upload-left">
-          <h2>Upload Your Room Image</h2>
-          <img src="static/site_images/example.jpg" alt="Room Example" class="room-image-preview">
-    
-          <div class="upload-box" onclick="document.getElementById('room-image').click()">
-            <p>⬆️ Drag and drop a file here, or <span class="browse">browse</span></p>
-            <input name="room-image" type="file" id="room-image" accept="image/*" hidden onchange="previewImage()">
-            <img id="image-preview" src="#" alt="Image Preview" style="display: none;" />
-            <p class="filename" id="filename"></p>
-          </div>
-        </div>
-    
-        <!-- Right Side -->
-        <div class="upload-right">
-            <label for="room-type">Room Type</label>
-            <select id="room-type" name="room-type">
-              <option>Living Room</option>
-              <option>Bedroom</option>
-              <option>Kitchen</option>
-              <option>Bathroom</option>
-            </select>
+                <!-- Left Side of Form: Image Upload -->
+                <div class="upload-left">
+                    <h2>Upload Your Room Image</h2>
+                    <!-- Example image shown before user selects their own -->
+                    <img src="static/site_images/example.jpg" alt="Room Example" class="room-image-preview">
 
-            <br>
-    
-            <label>Style Preference</label>
-            <div class="tag-row">
-            <button type="button" class="tag" onclick="selectStyle(this, 'Modern')">Modern</button>
-            <button type="button" class="tag" onclick="selectStyle(this, 'Scandinavian')">Scandinavian</button>
-            <button type="button" class="tag" onclick="selectStyle(this, 'Minimalist')">Minimalist</button>
-            <button type="button" class="tag" onclick="selectStyle(this, 'Industrial')">Industrial</button>
+                    <!-- Custom file input for uploading room image -->
+                    <div class="upload-box" onclick="document.getElementById('room-image').click()">
+                        <p>⬆️ Drag and drop a file here, or <span class="browse">browse</span></p>
+                        <input name="room-image" type="file" id="room-image" accept="image/*" hidden onchange="previewImage()">
+                        <!-- Image preview appears here after selection -->
+                        <img id="image-preview" src="#" alt="Image Preview" style="display: none;" />
+                        <p class="filename" id="filename"></p>
+                    </div>
+                </div>
+
+                <!-- Right Side of Form: Room Preferences -->
+                <div class="upload-right">
+                    <!-- Room Type Dropdown -->
+                    <label for="room-type">Room Type</label>
+                    <select id="room-type" name="room-type">
+                        <option>Living Room</option>
+                        <option>Bedroom</option>
+                        <option>Kitchen</option>
+                        <option>Bathroom</option>
+                    </select>
+
+                    <br>
+
+                    <!-- Style Preference Buttons -->
+                    <label>Style Preference</label>
+                    <div class="tag-row">
+                        <button type="button" class="tag" onclick="selectStyle(this, 'Modern')">Modern</button>
+                        <button type="button" class="tag" onclick="selectStyle(this, 'Scandinavian')">Scandinavian</button>
+                        <button type="button" class="tag" onclick="selectStyle(this, 'Minimalist')">Minimalist</button>
+                        <button type="button" class="tag" onclick="selectStyle(this, 'Industrial')">Industrial</button>
+                    </div>
+                    <!-- Hidden input to capture selected style -->
+                    <input type="hidden" name="selected-style" id="selected-style">
+
+                    <br>
+
+                    <!-- Marketplace Selection -->
+                    <label>Marketplace</label>
+                    <div class="marketplaces">
+                        <!-- Clicking on these images sets the preferred marketplace -->
+                        <img src="static/site_images/ikea.png" alt="IKEA" class="marketplace-img" onclick="selectMarketplace(this, 'IKEA')">
+                        <img src="static/site_images/wayfair.png" alt="Amazon" class="marketplace-img" onclick="selectMarketplace(this, 'Amazon')">
+                        <img src="static/site_images/jl.png" alt="Wayfair" class="marketplace-img" onclick="selectMarketplace(this, 'Wayfair')">
+                        <img src="static/site_images/made.png" alt="Wayfair" class="marketplace-img" onclick="selectMarketplace(this, 'Wayfair')">
+                    </div>
+                    <!-- Hidden input to capture selected marketplace -->
+                    <input type="hidden" name="selected-marketplace" id="selected-marketplace">
+
+                    <br>
+
+                    <!-- Budget Input -->
+                    <label for="budget">Budget (£)</label>
+                    <input type="number" id="budget" name="budget" placeholder="Enter your budget" min="0">
+
+                    <!-- Submit Button -->
+                    <button class="submit-btn" type="submit">Continue</button>
+                </div>
             </div>
-            <input type="hidden" name="selected-style" id="selected-style">
-
-            <br>
-                
-            <label>Marketplace</label>
-            <div class="marketplaces">
-            <img src="static/site_images/ikea.png" alt="IKEA" class="marketplace-img" onclick="selectMarketplace(this, 'IKEA')">
-            <img src="static/site_images/wayfair.png" alt="Amazon" class="marketplace-img" onclick="selectMarketplace(this, 'Amazon')">
-            <img src="static/site_images/jl.png" alt="Wayfair" class="marketplace-img" onclick="selectMarketplace(this, 'Wayfair')">
-            <img src="static/site_images/made.png" alt="Wayfair" class="marketplace-img" onclick="selectMarketplace(this, 'Wayfair')">
-            </div>
-            <input type="hidden" name="selected-marketplace" id="selected-marketplace">
-
-            <br>
-
-            <label for="budget">Budget (£)</label>
-            <input type="number" id="budget" name="budget" placeholder="Enter your budget" min="0">
-
-            
-            <button class="submit-btn" type="submit">Continue</button>
-          
-        </div>
-      </div>
-
-    </form>
+        </form>
     </section>
-    
-      
+
+    <!-- JavaScript for interactivity -->
     <script>
+        // Scrolls smoothly to the form section
         function scrollToForm() {
             document.getElementById('upload-section').scrollIntoView({ behavior: 'smooth' });
         }
 
+        // Displays image preview when user uploads an image
         function previewImage() {
             const file = document.getElementById('room-image').files[0];
             const preview = document.getElementById('image-preview');
@@ -98,44 +111,26 @@
                 reader.readAsDataURL(file);
             }
 
-            const example_image = document.querySelector('.room-image-preview')
-            example_image.style.display = "none"
-        
+            // Hides the example image once a user uploads theirs
+            const example_image = document.querySelector('.room-image-preview');
+            example_image.style.display = "none";
         }
 
-
-
-
- 
+        // Handles style selection and updates hidden input
         function selectStyle(button, style) {
-            // Clear existing selection
             const buttons = document.querySelectorAll('.tag');
             buttons.forEach(btn => btn.classList.remove('selected'));
-
-            // Highlight selected button
             button.classList.add('selected');
-
-            // Set the hidden input value
             document.getElementById('selected-style').value = style;
         }
 
-
-
- 
+        // Handles marketplace image selection and updates hidden input
         function selectMarketplace(img, marketplace) {
-            // Deselect all images
             const images = document.querySelectorAll('.marketplace-img');
             images.forEach(image => image.classList.remove('selected-marketplace'));
-
-            // Highlight selected image
             img.classList.add('selected-marketplace');
-
-            // Set the hidden input
             document.getElementById('selected-marketplace').value = marketplace;
         }
- 
-
-
     </script>
 </body>
 </html>
