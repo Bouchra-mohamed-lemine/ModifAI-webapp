@@ -1,49 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Set character encoding -->
   <meta charset="UTF-8">
+  
+  <!-- Page title shown in browser tab -->
   <title>Shopping Basket</title>
+  
+  <!-- Responsive design: scale layout on mobile devices -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Link to the external CSS file for styling -->
   <link rel="stylesheet" href="{{ url_for('static', filename='basket.css') }}">
-
 </head>
+
 <body>
+
+  <!-- Main container for the basket content -->
   <div class="container">
     <h1>Shopping Basket</h1>
+
+    <!-- Grid to hold all the selected product cards -->
     <div class="grid">
       {% for item in items %}
+        <!-- Each product card with a clickable link -->
         <div class="card" data-link="{{ item.Link }}" style="cursor: pointer;">
+          <!-- Product image -->
           <img src="{{ item.image }}" alt="{{ item.Name }}">
+          
+          <!-- Card content -->
           <div class="card-body">
             <p class="product-name">{{ item.Name }}</p>
             <p class="product-price">£{{ "%.2f"|format(item.Price) }}</p>
           </div>
         </div>
       {% endfor %}
-
     </div>
   </div>
 
+  <!-- Basket summary section showing subtotal and checkout button -->
   <div class="basket-summary">
-    <p class="total">Subtotal: £{{ "%.2f"|format(items | sum(attribute='Price')) }}</p>
+    <p class="total">
+      Subtotal: £{{ "%.2f"|format(items | sum(attribute='Price')) }}
+    </p>
+    
+    <!-- Checkout button (could be linked to a payment flow or next step) -->
     <button type="submit" class="checkout-btn">Checkout</button>
-
   </div>  
 
-
+  <!-- Script to make each product card clickable -->
   <script>
+    // Add event listeners to all cards
     document.querySelectorAll('.card').forEach(card => {
       card.addEventListener('click', () => {
-        const link = card.getAttribute('data-link');
+        const link = card.getAttribute('data-link'); // Get URL from data-link attribute
         if (link) {
-          window.open(link, '_blank'); // open in new tab
-          // or use window.location.href = link; to open in same tab
+          window.open(link, '_blank'); // Open the link in a new tab
+          // You could use: window.location.href = link; to open in the same tab
         }
       });
     });
   </script>
-
-
 
 </body>
 </html>
